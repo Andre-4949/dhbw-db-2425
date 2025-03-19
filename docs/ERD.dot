@@ -1,0 +1,126 @@
+digraph ERD {
+    node [shape=plaintext, fontname="Arial"];
+
+    // Stildefinitionen für Tabellen mit Linien zwischen den Attributen
+    Fahrzeug [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Fahrzeug</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>fahrzeug_id : INT PK</TD></TR>
+            <TR><TD>kennzeichen : VARCHAR(20)</TD></TR>
+            <TR><TD>modell : VARCHAR(50)</TD></TR>
+            <TR><TD>hersteller : VARCHAR(50)</TD></TR>
+            <TR><TD>baujahr : YEAR</TD></TR>
+        </TABLE>
+    >];
+
+    Fahrer [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Fahrer</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>fahrer_id : INT PK</TD></TR>
+            <TR><TD>vorname : VARCHAR(50)</TD></TR>
+            <TR><TD>nachname : VARCHAR(50)</TD></TR>
+            <TR><TD>lizenznummer : VARCHAR(50)</TD></TR>
+        </TABLE>
+    >];
+
+    Fahrt [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Fahrt</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>fahrt_id : INT PK</TD></TR>
+            <TR><TD>fahrzeug_id : INT FK</TD></TR>
+            <TR><TD>startzeit : DATETIME</TD></TR>
+            <TR><TD>endzeit : DATETIME</TD></TR>
+            <TR><TD>durchschnittsgeschwindigkeit : DECIMAL(5,2)</TD></TR>
+        </TABLE>
+    >];
+
+    Fahrt_Fahrer [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Fahrt_Fahrer</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>fahrt_id : INT FK</TD></TR>
+            <TR><TD>fahrer_id : INT FK</TD></TR>
+        </TABLE>
+    >];
+
+    Geraet [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Telematikgerät</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>geraet_id : INT PK</TD></TR>
+            <TR><TD>seriennummer : VARCHAR(50)</TD></TR>
+            <TR><TD>modell : VARCHAR(50)</TD></TR>
+        </TABLE>
+    >];
+
+    Wartung [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Wartung</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>wartung_id : INT PK</TD></TR>
+            <TR><TD>fahrzeug_id : INT FK</TD></TR>
+            <TR><TD>geraet_id : INT FK</TD></TR>
+            <TR><TD>wartungsdatum : DATE</TD></TR>
+            <TR><TD>beschreibung : TEXT</TD></TR>
+        </TABLE>
+    >];
+
+    Diagnose [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Diagnose</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>diagnose_id : INT PK</TD></TR>
+            <TR><TD>fahrt_id : INT FK</TD></TR>
+            <TR><TD>fehlercode : VARCHAR(20)</TD></TR>
+            <TR><TD>beschreibung : TEXT</TD></TR>
+        </TABLE>
+    >];
+
+    Beschleunigung [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Beschleunigung</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>beschleunigung_id : INT PK</TD></TR>
+            <TR><TD>fahrt_id : INT FK</TD></TR>
+            <TR><TD>wert : DECIMAL(5,2)</TD></TR>
+            <TR><TD>zeitpunkt : DATETIME</TD></TR>
+        </TABLE>
+    >];
+
+    Fahrzeugparameter [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Fahrzeugparameter</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>parameter_id : INT PK</TD></TR>
+            <TR><TD>fahrt_id : INT FK</TD></TR>
+            <TR><TD>parameter_name : VARCHAR(50)</TD></TR>
+            <TR><TD>parameter_wert : DECIMAL(10,2)</TD></TR>
+        </TABLE>
+    >];
+
+    Geraet_Installation [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Geraet_Installation</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>installation_id : INT PK</TD></TR>
+            <TR><TD>fahrzeug_id : INT FK</TD></TR>
+            <TR><TD>geraet_id : INT FK</TD></TR>
+            <TR><TD>installationsdatum : DATE</TD></TR>
+        </TABLE>
+    >];
+
+    // Beziehungen zwischen den Tabellen
+    Fahrzeug -> Fahrt [label="1:n", color=blue, fontcolor=blue];
+    Fahrzeug -> Wartung [label="1:n", color=blue, fontcolor=blue];
+    Fahrzeug -> Geraet_Installation [label="1:n", color=blue, fontcolor=blue];
+    Fahrer -> Fahrt_Fahrer [label="1:n", color=blue, fontcolor=blue];
+    Fahrt -> Fahrt_Fahrer [label="1:n", color=blue, fontcolor=blue];
+    Fahrt -> Diagnose [label="1:n", color=blue, fontcolor=blue];
+    Fahrt -> Beschleunigung [label="1:n", color=blue, fontcolor=blue];
+    Fahrt -> Fahrzeugparameter [label="1:n", color=blue, fontcolor=blue];
+    Geraet -> Wartung [label="1:n", color=blue, fontcolor=blue];
+    Geraet -> Geraet_Installation [label="1:n", color=blue, fontcolor=blue];
+}

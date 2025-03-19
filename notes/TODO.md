@@ -1,8 +1,8 @@
 ## To-Do Liste
 
 ## Teil 1 ➡️
-- [ ] ER-Modell als PDF 🔴
-- [ ] SQL-Skripte zur Erstellung des DB-Schemas (lauffähig für MySQL) 🔴
+- [x] ER-Modell als PDF 🔴
+- [x] SQL-Skripte zur Erstellung des DB-Schemas (lauffähig für MySQL) 🔴
 
 ## Teil 2 ➡️
 - [ ] Import aller Daten in das MySQL-Schema, evtl. Datenbereinigung (über SQL/MySQL) 🔴
