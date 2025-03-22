@@ -30,15 +30,15 @@ logger = logging.getLogger(__name__)
 # Configuration
 # -----------------------------------------------------------------------------
 
-from api.routes.route import register_routes
+from api.routes.route import MONGO_CONFIG_STRING, register_routes
 register_routes(app)
 print(f"MYSQL_CONFIG_STRING: {MYSQL_CONFIG_STRING}")
+print(f"MONGO_CONFIG_STRING: {MONGO_CONFIG_STRING}")
 mysql_engine = create_engine(MYSQL_CONFIG_STRING)
 mysql_session = sessionmaker(autocommit=False, autoflush=False, bind=mysql_engine)
-
 # -----------------------------------------------------------------------------
 # Main Entrypoint
 # -----------------------------------------------------------------------------
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
 

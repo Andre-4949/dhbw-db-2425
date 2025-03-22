@@ -75,16 +75,19 @@ def register_routes(app):
                     file_content = file.read().decode('utf-8')
                     try:
                         data = json.loads(file_content)
-
                         if isinstance(data, dict):
                             db[target_collection].insert_one(data)
                             success_message = "Successfully added one document!"
                         elif isinstance(data, list):
-                            if data:
-                                db[target_collection].insert_many(data)
-                                success_message = f"{len(data)} documents successfully added!"
-                            else:
+                            if not data:
                                 error_message = "The JSON file contains an empty array."
+                            else:
+                                result = db[target_collection].insert_many(data)
+                                print(f"Mongo acknowledge import: {result.acknowledged}")
+                                if(result.acknowledged):
+                                    success_message = f"{len(data)} documents successfully added!"
+                                else:
+                                    error_message = "An error occurred while importing data."
                         else:
                             error_message = "The JSON file must contain either an object or an array of objects."
 

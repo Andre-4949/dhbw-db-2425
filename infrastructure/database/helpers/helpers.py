@@ -68,7 +68,7 @@ def get_mysql_connection():
 
 
 # Add this function to `helpers.py`
-def get_db(table_name=None):
+def get_db(table_name=""):
     """
     Returns a database connection based on the table name:
     - MySQL for relational tables
@@ -110,8 +110,28 @@ def convert_to_mongodb(selected_tables, embed=True):
 
     total_inserted = 0
 
-    ERGAENZEN
+    for table_name in selected_tables:
+        if table_name not in meta.tables:
+            print(f"Table {table_name} does not exist in the MySQL database.")
+            continue
+
+        table = meta.tables[table_name]
+        query = session.query(table)
+        rows = query.all()
+
+        if embed:
+            embedded_data = []
+            for row in rows:
+                row_dict = fix_dates(dict(row))
+                embedded_data.append(row_dict)
+            db["embedded"].insert_many(embedded_data)
+            total_inserted += len(embedded_data)
+        else:
+            collection = db[table_name]
+            documents = [fix_dates(dict(row)) for row in rows]
+            collection.insert_many(documents)
+            total_inserted += len(documents)
 
     session.close()
     print("Conversion completed.")
-    return total_inserted  #
+    return total_inserted
