@@ -86,8 +86,53 @@
           </tbody>
         </table>
       </div>
-
-
+    {% elif report_data and selected_report == "max_speed_per_driver" %}
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover align-middle">
+          <thead class="table-primary">
+            <tr>
+              <th>FahrerID</th>
+              <th>Vorname</th>
+              <th>Nachname</th>
+              <th>Maximale Geschwindigkeit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in report_data %}
+              <tr>
+                <td>{{ row.fahrerID }}</td>  <!-- Must match JSON key exactly -->
+                <td>{{ row.vorname }}</td>
+                <td>{{ row.nachname }}</td>
+                <td>{{ row.max_speed }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% elif selected_report == "recent_drivers" and total_items==0 %}
+    <div class="table-responsive">Keine Fahrten in den letzten x Monaten.</div>
+    {% elif report_data and selected_report == "recent_drivers" %}
+      <div class="table-responsive">
+        aa
+        <table class="table table-striped table-bordered table-hover align-middle">
+          <thead class="table-primary">
+            <tr>
+              <th>FahrerID</th>
+              <th>Vorname</th>
+              <th>Nachname</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in report_data %}
+              <tr>
+                <td>{{ row.fahrerID }}</td>  <!-- Must match JSON key exactly -->
+                <td>{{ row.vorname }}</td>
+                <td>{{ row.nachname }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     {% elif report_data and selected_report == "geraete_verteilung" %}
       <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover align-middle">

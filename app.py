@@ -43,21 +43,21 @@ mysql_session = sessionmaker(autocommit=False, autoflush=False, bind=mysql_engin
 
 #Um Datenbank zu erstellen und zu füllen
 
-# import sqlalchemy
+import sqlalchemy
 
-# def execute_sql_script(file_path):
-#     with open(file_path, 'r') as file:
-#         sql_script = file.read()
+def execute_sql_script(file_path):
+    with open(file_path, 'r') as file:
+        sql_script = file.read()
     
-#     try:
-#         with mysql_engine.connect() as connection:
-#             for statement in sql_script.split(";"):
-#                 if statement.strip():
-#                     print("STATEMENT: ", sqlalchemy.text(statement))
-#                     connection.execute(sqlalchemy.text(statement))
-#         print("✅ SQL-Skript erfolgreich ausgeführt!")
-#     except Exception as e:
-#         print(f"❌ Fehler beim Ausführen des SQL-Skripts: {e}")
+    try:
+        with mysql_engine.connect() as connection:
+            for statement in sql_script.split(";"):
+                if statement.strip():
+                    print("STATEMENT: ", sqlalchemy.text(statement))
+                    connection.execute(sqlalchemy.text(statement))
+        print("✅ SQL-Skript erfolgreich ausgeführt!")
+    except Exception as e:
+        print(f"❌ Fehler beim Ausführen des SQL-Skripts: {e}")
 
 
 
