@@ -456,14 +456,20 @@ def register_routes(app):
 
         row_id = request.form.get("id")
         update_data = {k: v for k, v in request.form.items() if k != "id"}
-
+        print(f"{update_data=} {row_id=} {table_name=}")
         try:
             if table_name in ALLOWED_TABLES:
                 # MySQL Update
                 cursor = db.cursor()
                 set_clause = ", ".join(f"{key} = %s" for key in update_data.keys())
-                query = f"ERGAENZEN"
+                query = f"""
+                UPDATE {table_name}
+                SET {set_clause}
+                WHERE id = %s
+                """
                 values = list(update_data.values()) + [row_id]
+                formatted_query = query % tuple(values)
+                print(f"Executing query: {formatted_query}")
                 cursor.execute(query, values)
                 db.commit()
                 cursor.close()
