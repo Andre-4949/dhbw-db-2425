@@ -39,6 +39,32 @@ mysql_session = sessionmaker(autocommit=False, autoflush=False, bind=mysql_engin
 # -----------------------------------------------------------------------------
 # Main Entrypoint
 # -----------------------------------------------------------------------------
+
+
+#Um Datenbank zu erstellen und zu füllen
+
+# import sqlalchemy
+
+# def execute_sql_script(file_path):
+#     with open(file_path, 'r') as file:
+#         sql_script = file.read()
+    
+#     try:
+#         with mysql_engine.connect() as connection:
+#             for statement in sql_script.split(";"):
+#                 if statement.strip():
+#                     print("STATEMENT: ", sqlalchemy.text(statement))
+#                     connection.execute(sqlalchemy.text(statement))
+#         print("✅ SQL-Skript erfolgreich ausgeführt!")
+#     except Exception as e:
+#         print(f"❌ Fehler beim Ausführen des SQL-Skripts: {e}")
+
+
+
+# execute_sql_script("./data/create_mysql_db.sql")
+# execute_sql_script("./data/fill_mysql.sql")
+
 if __name__ == '__main__':
     app.run(debug=True)
+
 
