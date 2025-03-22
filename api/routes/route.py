@@ -50,11 +50,11 @@ def register_routes(app):
             # Existing collection
             if collection_choice == "existing":
                 selected_table = request.form.get("table_name")
-                if selected_table not in db.list_collection_names():
+                if selected_table not in ALLOWED_TABLES:
                     error_message = "Invalid table selected."
                     return render_template(
                         "add_data.html",
-                        tables=db.list_collection_names(),
+                        tables=ALLOWED_TABLES,
                         success_message=success_message,
                         error_message=error_message,
                     )
@@ -69,7 +69,7 @@ def register_routes(app):
                     )
                     return render_template(
                         "add_data.html",
-                        tables=db.list_collection_names(),
+                        tables=ALLOWED_TABLES,
                         success_message=success_message,
                         error_message=error_message,
                     )
@@ -115,7 +115,7 @@ def register_routes(app):
 
         return render_template(
             "add_data.html",
-            tables=db.list_collection_names(),
+            tables=ALLOWED_TABLES,
             success_message=success_message,
             error_message=error_message,
         )
@@ -276,7 +276,7 @@ def register_routes(app):
             mongo_client = pymongo.MongoClient(MONGO_CONFIG_STRING)
             mongo_db = mongo_client[MONGO_DB_NAME]
 
-            collections = mongo_db.list_collection_names()
+            collections = mongo_ALLOWED_TABLES
             if not collections:
                 stats["MongoDB"]["error"] = "No collections found"
 
@@ -458,7 +458,7 @@ def register_routes(app):
         update_data = {k: v for k, v in request.form.items() if k != "id"}
 
         try:
-            if table_name in db.list_collection_names():
+            if table_name in ALLOWED_TABLES:
                 # MySQL Update
                 cursor = db.cursor()
                 set_clause = ", ".join(f"{key} = %s" for key in update_data.keys())

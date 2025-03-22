@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+import pymongo
 
 load_dotenv()
 
@@ -20,9 +21,8 @@ MONGO_CONFIG_STRING = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_HOST}:{MO
 
 ALLOWED_EXTENSIONS = {'json'}
 
-ALLOWED_TABLES = [
-    'ERGAENZEN', 'ERGAENZEN', 'ERGAENZEN', 'ERGAENZEN',
-    'ERGAENZEN', 'ERGAENZEN', 'ERGAENZEN',
-    'ERGAENZEN', 'ERGAENZEN', 'ERGAENZEN', 'ERGAENZEN'
-]
+client = pymongo.MongoClient(MONGO_CONFIG_STRING)
+db = client[MONGO_DB_NAME]
+
+ALLOWED_TABLES = db.list_collection_names()
 
