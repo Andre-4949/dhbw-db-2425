@@ -50,11 +50,11 @@ def register_routes(app):
             # Existing collection
             if collection_choice == "existing":
                 selected_table = request.form.get("table_name")
-                if selected_table not in ALLOWED_TABLES:
+                if selected_table not in db.list_collection_names():
                     error_message = "Invalid table selected."
                     return render_template(
                         "add_data.html",
-                        tables=ALLOWED_TABLES,
+                        tables=db.list_collection_names(),
                         success_message=success_message,
                         error_message=error_message,
                     )
@@ -69,7 +69,7 @@ def register_routes(app):
                     )
                     return render_template(
                         "add_data.html",
-                        tables=ALLOWED_TABLES,
+                        tables=db.list_collection_names(),
                         success_message=success_message,
                         error_message=error_message,
                     )
@@ -115,7 +115,7 @@ def register_routes(app):
 
         return render_template(
             "add_data.html",
-            tables=ALLOWED_TABLES,
+            tables=db.list_collection_names(),
             success_message=success_message,
             error_message=error_message,
         )
@@ -170,12 +170,16 @@ def register_routes(app):
         # 🌡️ Report: Durchschnittliche Geschwindigkeit und Motortemperatur im März 2024
         # -------------------------------------------------------------------------
         elif selected_report == "avg_speed_temp_march":
-            query = """"""
+            query = """
+                SELECT AVG(fp.geschwindigkeit) AS avg_speed, AVG(fp.motortemperatur) AS avg_temp
+                FROM Fahrzeugparameter fp, Fahrt f
+                WHERE fp.fahrtid = f.id
+                AND f.startzeitpunkt >= '2024-03-01' AND f.endzeitpunkt < '2024-04-01';
+            """
             cursor.execute(query)
             result = cursor.fetchall()
             report_data = [
                 {
-                    "fahrtID": row["fahrtID"],
                     "avg_speed": row["avg_speed"],
                     "avg_temp": row["avg_temp"],
                 }
@@ -454,7 +458,7 @@ def register_routes(app):
         update_data = {k: v for k, v in request.form.items() if k != "id"}
 
         try:
-            if table_name in ALLOWED_TABLES:
+            if table_name in db.list_collection_names():
                 # MySQL Update
                 cursor = db.cursor()
                 set_clause = ", ".join(f"{key} = %s" for key in update_data.keys())
