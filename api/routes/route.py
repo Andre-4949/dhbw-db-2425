@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import pymongo
+from werkzeug import Response
 from infrastructure.database.helpers.helpers import (
     allowed_file,
     get_tables,
@@ -351,10 +352,9 @@ def register_routes(app):
             )
             page = int(request.args.get("page", 1))
             rows_per_page = 10
-
-            if selected_table:
-                meta = MetaData()
-                meta.reflect(bind=mysql_engine)
+            meta = MetaData()   
+            meta.reflect(bind=mysql_engine)
+            if selected_table in meta.tables.keys() and selected_table:
                 table = meta.tables[selected_table]
 
                 rows = []
@@ -364,8 +364,7 @@ def register_routes(app):
                     try:
                         count_query = text(f"SELECT * FROM {selected_table}")
                         total_rows_query = conn.execute(count_query)
-                        total_rows = total_rows_query.scalar()
-
+                        total_rows = total_rows_query.all().__len__()
                         offset = (page - 1) * rows_per_page
                         query = table.select().limit(rows_per_page).offset(offset)
                         result = conn.execute(query)
@@ -447,37 +446,33 @@ def register_routes(app):
         return render_template("convert.html")
 
     @app.route("/update/<table_name>", methods=["POST"])
-    def update_row(table_name):
+    def update_row(table_name) -> Response:
         try:
-            db = get_db(table_name)
+            db = get_mysql_connection()
         except Exception as e:
             flash(f"Database error: {e}", "danger")
             return redirect(url_for("view_table", selected_table=table_name))
 
         row_id = request.form.get("id")
         update_data = {k: v for k, v in request.form.items() if k != "id"}
-        print(f"{update_data=} {row_id=} {table_name=}")
+        print(f"{update_data=} {row_id=} {table_name=} {ALLOWED_TABLES=}")
         try:
-            if table_name in ALLOWED_TABLES:
+            # if table_name not in ALLOWED_TABLES:
                 # MySQL Update
                 cursor = db.cursor()
                 set_clause = ", ".join(f"{key} = %s" for key in update_data.keys())
+                print(f"Executing query: {set_clause}")
                 query = f"""
                 UPDATE {table_name}
                 SET {set_clause}
                 WHERE id = %s
                 """
                 values = list(update_data.values()) + [row_id]
-                formatted_query = query % tuple(values)
-                print(f"Executing query: {formatted_query}")
                 cursor.execute(query, values)
                 db.commit()
                 cursor.close()
-            else:
-                # MongoDB Update
-                db.update_one({"id": int(row_id)}, {"$set": update_data})
 
-            flash(f"Row updated successfully in {table_name}", "success")
+                flash(f"Row updated successfully in {table_name}", "success")
         except Exception as e:
             flash(f"Error updating row: {str(e)}", "danger")
 
