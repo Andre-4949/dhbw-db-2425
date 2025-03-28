@@ -1,10 +1,12 @@
-## To-Do Liste
+# To-Do Liste
 
 ## Teil 1 ➡️
+
 - [x] ER-Modell als PDF 🔴
 - [x] SQL-Skripte zur Erstellung des DB-Schemas (lauffähig für MySQL) 🔴
 
 ## Teil 2 ➡️
+
 - [x] Import aller Daten in das MySQL-Schema, evtl. Datenbereinigung (über SQL/MySQL) 🔴
 - [x] Alle Importe innerhalb von Transaktionen 🔴
 - [ ] Lauffähige App erstellen (Programmrumpf ergänzen) 🔴
@@ -18,11 +20,5 @@
 - [ ] Eine Stored Procedure zum Hinzufügen einer neuen Fahrt (als SQL codiert) 🔴
 - [ ] Änderungen sollen immer persistent in die MySQL-Datenbank geschrieben werden 🔴
 
-
 Mögliche Skriptgestaltung:
 ![grafik](https://github.com/user-attachments/assets/91f65873-4036-46ca-bb5a-86627f044b53)
-
-
-
-
-     
