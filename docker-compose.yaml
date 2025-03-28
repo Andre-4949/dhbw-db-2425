@@ -28,5 +28,15 @@ services:
 volumes:
   mongo-data:
   mysql-data:
-# docker volume create mongo-data
-# docker volume create mysql-data
+## docker volume
+# mkdir databaseStorage && cd databaseStorage && docker volume create mongo-data && docker volume create mysql-data
+
+## python virtual envrionment
+# python -m venv venv
+
+## install requirements
+# Windows: .\venv\Scripts\pip.exe install -r requirements.txt && .\venv\Scripts\pip install cryptography
+# Linux/Unix/MacOs: ./venv/bin/pip install -r requirements.txt && ./venv/bin/pip install cryptography
+
+## run app
+# venv\Scripts\python.exe app.py
