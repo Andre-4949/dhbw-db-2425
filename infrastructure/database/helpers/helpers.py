@@ -55,7 +55,7 @@ def insert_message_to_mysql(message, duration):
             )"""
         cursor.execute(query)
         conn.commit()
-        
+
         query = """
             INSERT INTO success_logs (message, duration)
             VALUES (%s, %s)
@@ -180,14 +180,15 @@ def convert_to_mongodb(selected_tables, embed=True):
 
             # Remove duplicates based on '_id' field
             unique_embedded_data = {doc.get('_id', id(doc)): doc for doc in embedded_data}.values()
-
-            db["embedded"].insert_many(unique_embedded_data)
-            total_inserted += len(embedded_data)
+            if len(unique_embedded_data) != 0:
+                db["embedded"].insert_many(unique_embedded_data)
+                total_inserted += len(embedded_data)
         else:
             collection = db[table_name]
             documents = [fix_dates(row) for row in rows_as_dicts]
-            collection.insert_many(documents)
-            total_inserted += len(documents)
+            if len(documents) != 0:
+                collection.insert_many(documents)
+                total_inserted += len(documents)
 
     session.close()
     print("Conversion completed.")
