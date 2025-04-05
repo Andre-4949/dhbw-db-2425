@@ -47,6 +47,16 @@ def insert_message_to_mysql(message, duration):
         conn = get_mysql_connection()
         cursor = conn.cursor()
         query = """
+                    CREATE TABLE IF NOT EXISTS success_logs (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                message TEXT NOT NULL,
+                duration FLOAT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )"""
+        cursor.execute(query)
+        conn.commit()
+        
+        query = """
             INSERT INTO success_logs (message, duration)
             VALUES (%s, %s)
         """
