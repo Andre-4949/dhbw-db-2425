@@ -1,3 +1,5 @@
+START TRANSACTION;
+
 -- Fahrzeuge
 LOAD DATA INFILE '/var/lib/mysql-files/01_fahrzeug.csv'
 INTO TABLE Fahrzeug
@@ -44,7 +46,7 @@ IGNORE 1 LINES
 (id, fahrzeugid, geraetid, @startzeitpunkt, @endzeitpunkt, route)
 SET 
     startzeitpunkt = STR_TO_DATE(@startzeitpunkt, '%d.%m.%Y %H:%i'),
-    endzeitpunkt = STR_TO_DATE(@endzeitpunkt, '%d.%m.%Y %H:%i');;
+    endzeitpunkt = STR_TO_DATE(@endzeitpunkt, '%d.%m.%Y %H:%i');
 
 -- Fahrzeugparameter
 LOAD DATA INFILE '/var/lib/mysql-files/07_fahrzeugparameter.csv'
@@ -117,3 +119,5 @@ JOIN Fahrt f ON t.fahrtid = f.id;
 
 -- 4. Lösche die temporäre Tabelle, wenn fertig
 DROP TABLE IF EXISTS temp_fahrt_fahrer;
+
+COMMIT;

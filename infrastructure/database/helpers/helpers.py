@@ -37,7 +37,8 @@ def insert_message_to_mysql(message, duration):
         conn = get_mysql_connection()
         cursor = conn.cursor()
         query = """
-            ERGAENZEN
+            INSERT INTO success_logs (message, duration)
+            VALUES (%s, %s)
         """
         cursor.execute(query, (message, duration))
         conn.commit()

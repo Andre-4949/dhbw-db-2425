@@ -16,9 +16,9 @@
 - [x] Report 2: Alle Fahrer finden, die innerhalb der letzten drei Monate eine Fahrt durchgeführt haben (als SQL codiert) 🔴
 - [x] Report 3: Die höchste jemals gemessene Geschwindigkeit für jeden Fahrer (als SQL codiert) 🔴
 - [x] Hinzufügen der Collection unfall.json in MongoDB 🔴
-- [ ] Editieren der MySQL-Tabellen soll in eine Changelog-Tabelle getriggert werden (als SQL codiert) 🔴
-- [ ] Eine Stored Procedure zum Hinzufügen einer neuen Fahrt (als SQL codiert) 🔴
-- [ ] Änderungen sollen immer persistent in die MySQL-Datenbank geschrieben werden 🔴
+- [x] Editieren der MySQL-Tabellen soll in eine Changelog-Tabelle getriggert werden (als SQL codiert) 🔴
+- Wo im Frontend ?! [ ] Eine Stored Procedure zum Hinzufügen einer neuen Fahrt (als SQL codiert) 🔴 
+- [x] Änderungen sollen immer persistent in die MySQL-Datenbank geschrieben werden 🔴
 
 Mögliche Skriptgestaltung:
 ![grafik](https://github.com/user-attachments/assets/91f65873-4036-46ca-bb5a-86627f044b53)

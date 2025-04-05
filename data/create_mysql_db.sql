@@ -10,6 +10,8 @@ DROP TABLE IF EXISTS Geraet;
 DROP TABLE IF EXISTS Fahrer_Fahrzeug;
 DROP TABLE IF EXISTS Fahrer;
 DROP TABLE IF EXISTS Fahrzeug;
+DROP TABLE IF EXISTS change_log;
+
 
 -- Fahrzeuge
 CREATE TABLE Fahrzeug (
@@ -124,6 +126,13 @@ CREATE TABLE Geraet_Installation (
     FOREIGN KEY (fahrzeugid) REFERENCES Fahrzeug(id) ON DELETE RESTRICT
 );
 
-
-
-
+CREATE TABLE change_log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_in_table INT NOT NULL,
+    secondary_id_in_table INT,
+    table_name VARCHAR(255) NOT NULL,
+    column_name VARCHAR(255) NOT NULL,
+    old_value TEXT,
+    new_value TEXT,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
