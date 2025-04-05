@@ -35,8 +35,8 @@ CREATE TABLE Fahrer (
 CREATE TABLE Fahrer_Fahrzeug (
     fahrerid INT NOT NULL,
     fahrzeugid INT NOT NULL,
-    gueltig_ab DATE NOT NULL,
-    gueltig_bis DATE,
+    gueltig_ab DATETIME NOT NULL,
+    gueltig_bis DATETIME,
     PRIMARY KEY (fahrerid, fahrzeugid),
     FOREIGN KEY (fahrerid) REFERENCES Fahrer(id) ON DELETE RESTRICT,
     FOREIGN KEY (fahrzeugid) REFERENCES Fahrzeug(id) ON DELETE RESTRICT
@@ -59,7 +59,7 @@ CREATE TABLE Fahrt (
     geraetid INT,
     startzeitpunkt DATETIME NOT NULL,
     endzeitpunkt DATETIME NOT NULL,
-    route VARCHAR(255) NOT NULL,
+    route VARCHAR(50) NOT NULL,
     FOREIGN KEY (fahrzeugid) REFERENCES Fahrzeug(id) ON DELETE RESTRICT,
     FOREIGN KEY (geraetid) REFERENCES Geraet(id) ON DELETE SET NULL
 );
@@ -101,7 +101,7 @@ CREATE TABLE Diagnose (
     id INT PRIMARY KEY,
     fahrtid INT NOT NULL,
     zeitstempel DATETIME NOT NULL,
-    fehlercode VARCHAR(10) NOT NULL,
+    fehlercode VARCHAR(20) NOT NULL,
     beschreibung TEXT,
     FOREIGN KEY (fahrtid) REFERENCES Fahrt(id) ON DELETE RESTRICT
 );
@@ -130,9 +130,9 @@ CREATE TABLE change_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_in_table INT NOT NULL,
     secondary_id_in_table INT,
-    table_name VARCHAR(255) NOT NULL,
-    column_name VARCHAR(255) NOT NULL,
+    table_name VARCHAR(50) NOT NULL,
+    column_name VARCHAR(50) NOT NULL,
     old_value TEXT,
     new_value TEXT,
-    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    changed_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

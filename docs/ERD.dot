@@ -6,11 +6,10 @@ digraph ERD {
         <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
             <TR><TD BGCOLOR="lightblue"><B>Fahrzeug</B></TD></TR>
             <TR><TD BGCOLOR="gray"></TD></TR>
-            <TR><TD>fahrzeug_id : INT PK</TD></TR>
-            <TR><TD>kennzeichen : VARCHAR(20)</TD></TR>
+            <TR><TD>id : INT PK</TD></TR>
             <TR><TD>modell : VARCHAR(50)</TD></TR>
             <TR><TD>hersteller : VARCHAR(50)</TD></TR>
-            <TR><TD>baujahr : YEAR</TD></TR>
+            <TR><TD>baujahr : INT</TD></TR>
         </TABLE>
     >];
 
@@ -18,10 +17,23 @@ digraph ERD {
         <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
             <TR><TD BGCOLOR="lightblue"><B>Fahrer</B></TD></TR>
             <TR><TD BGCOLOR="gray"></TD></TR>
-            <TR><TD>fahrer_id : INT PK</TD></TR>
+            <TR><TD>id : INT PK</TD></TR>
             <TR><TD>vorname : VARCHAR(50)</TD></TR>
             <TR><TD>nachname : VARCHAR(50)</TD></TR>
-            <TR><TD>lizenznummer : VARCHAR(50)</TD></TR>
+            <TR><TD>geburtsdatum : DATE</TD></TR>
+            <TR><TD>kontakt_nr : VARCHAR(20)</TD></TR>
+            <TR><TD>email : VARCHAR(100)</TD></TR>
+        </TABLE>
+    >];
+
+    Fahrer_Fahrzeug [label=< 
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD BGCOLOR="lightblue"><B>Fahrer_Fahrzeug</B></TD></TR>
+            <TR><TD BGCOLOR="gray"></TD></TR>
+            <TR><TD>fahrerid : INT FK</TD></TR>
+            <TR><TD>fahrzeugid : INT FK</TD></TR>
+            <TR><TD>gueltig_ab : DATETIME </TD></TR>
+            <TR><TD>gueltig_bis : DATETIME </TD></TR>
         </TABLE>
     >];
 
@@ -29,11 +41,12 @@ digraph ERD {
         <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
             <TR><TD BGCOLOR="lightblue"><B>Fahrt</B></TD></TR>
             <TR><TD BGCOLOR="gray"></TD></TR>
-            <TR><TD>fahrt_id : INT PK</TD></TR>
-            <TR><TD>fahrzeug_id : INT FK</TD></TR>
-            <TR><TD>startzeit : DATETIME</TD></TR>
-            <TR><TD>endzeit : DATETIME</TD></TR>
-            <TR><TD>durchschnittsgeschwindigkeit : DECIMAL(5,2)</TD></TR>
+            <TR><TD>id : INT PK</TD></TR>
+            <TR><TD>fahrzeugid : INT FK</TD></TR>
+            <TR><TD>geraetid : INT FK</TD></TR>
+            <TR><TD>startzeitpunkt : DATETIME</TD></TR>
+            <TR><TD>endzeitpunkt : DATETIME</TD></TR>
+            <TR><TD>route : VARCHAR(50)</TD></TR>
         </TABLE>
     >];
 
@@ -48,10 +61,12 @@ digraph ERD {
 
     Geraet [label=< 
         <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
-            <TR><TD BGCOLOR="lightblue"><B>Telematikgerät</B></TD></TR>
+            <TR><TD BGCOLOR="lightblue"><B>Gerät</B></TD></TR>
             <TR><TD BGCOLOR="gray"></TD></TR>
-            <TR><TD>geraet_id : INT PK</TD></TR>
-            <TR><TD>seriennummer : VARCHAR(50)</TD></TR>
+            <TR><TD>id : INT PK</TD></TR>
+            <TR><TD>fahrzeugid : INT FK(50)</TD></TR>
+            <TR><TD>geraet_typ : VARCHAR(50)</TD></TR>
+            <TR><TD>hersteller : VARCHAR(50)</TD></TR>
             <TR><TD>modell : VARCHAR(50)</TD></TR>
         </TABLE>
     >];
@@ -60,11 +75,10 @@ digraph ERD {
         <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
             <TR><TD BGCOLOR="lightblue"><B>Wartung</B></TD></TR>
             <TR><TD BGCOLOR="gray"></TD></TR>
-            <TR><TD>wartung_id : INT PK</TD></TR>
-            <TR><TD>fahrzeug_id : INT FK</TD></TR>
-            <TR><TD>geraet_id : INT FK</TD></TR>
-            <TR><TD>wartungsdatum : DATE</TD></TR>
-            <TR><TD>beschreibung : TEXT</TD></TR>
+            <TR><TD>id : INT PK</TD></TR>
+            <TR><TD>fahrzeugid : INT FK</TD></TR>
+            <TR><TD>datum : DATETIME</TD></TR>
+            <TR><TD>beschreibung : VARCHAR(50)</TD></TR>
         </TABLE>
     >];
 
@@ -72,10 +86,11 @@ digraph ERD {
         <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
             <TR><TD BGCOLOR="lightblue"><B>Diagnose</B></TD></TR>
             <TR><TD BGCOLOR="gray"></TD></TR>
-            <TR><TD>diagnose_id : INT PK</TD></TR>
-            <TR><TD>fahrt_id : INT FK</TD></TR>
-            <TR><TD>fehlercode : VARCHAR(20)</TD></TR>
-            <TR><TD>beschreibung : TEXT</TD></TR>
+            <TR><TD>id : INT PK</TD></TR>
+            <TR><TD>fahrtid : INT FK</TD></TR>
+            <TR><TD>zeitstempel : DATETIME</TD></TR>
+            <TR><TD>fehlercode : VARCHAR(50)</TD></TR>
+            <TR><TD>beschreibung : VARCHAR(50)</TD></TR>
         </TABLE>
     >];
 
@@ -83,10 +98,12 @@ digraph ERD {
         <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
             <TR><TD BGCOLOR="lightblue"><B>Beschleunigung</B></TD></TR>
             <TR><TD BGCOLOR="gray"></TD></TR>
-            <TR><TD>beschleunigung_id : INT PK</TD></TR>
-            <TR><TD>fahrt_id : INT FK</TD></TR>
-            <TR><TD>wert : DECIMAL(5,2)</TD></TR>
-            <TR><TD>zeitpunkt : DATETIME</TD></TR>
+            <TR><TD>id : INT PK</TD></TR>
+            <TR><TD>fahrtid : INT FK</TD></TR>
+            <TR><TD>zeitstempel : DATETIME</TD></TR>
+            <TR><TD>x_achse : DECIMAL(5,2)</TD></TR>
+            <TR><TD>y_achse : DECIMAL(5,2)</TD></TR>
+            <TR><TD>z_achse : DECIMAL(5,2)</TD></TR>
         </TABLE>
     >];
 
@@ -94,10 +111,13 @@ digraph ERD {
         <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
             <TR><TD BGCOLOR="lightblue"><B>Fahrzeugparameter</B></TD></TR>
             <TR><TD BGCOLOR="gray"></TD></TR>
-            <TR><TD>parameter_id : INT PK</TD></TR>
-            <TR><TD>fahrt_id : INT FK</TD></TR>
-            <TR><TD>parameter_name : VARCHAR(50)</TD></TR>
-            <TR><TD>parameter_wert : DECIMAL(10,2)</TD></TR>
+            <TR><TD>id : INT PK</TD></TR>
+            <TR><TD>fahrtid : INT FK</TD></TR>
+            <TR><TD>zeitstempel : DATETIME</TD></TR>
+            <TR><TD>geschwindigkeit : DECIMAL(5,2)</TD></TR>
+            <TR><TD>motortemperatur : DECIMAL(5,2)</TD></TR>
+            <TR><TD>luftmassenstrom : DECIMAL(5,2)</TD></TR>
+            <TR><TD>batterie : DECIMAL(5,2)</TD></TR>
         </TABLE>
     >];
 
@@ -105,22 +125,26 @@ digraph ERD {
         <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
             <TR><TD BGCOLOR="lightblue"><B>Geraet_Installation</B></TD></TR>
             <TR><TD BGCOLOR="gray"></TD></TR>
-            <TR><TD>installation_id : INT PK</TD></TR>
-            <TR><TD>fahrzeug_id : INT FK</TD></TR>
-            <TR><TD>geraet_id : INT FK</TD></TR>
-            <TR><TD>installationsdatum : DATE</TD></TR>
+            <TR><TD>id : INT PK</TD></TR>
+            <TR><TD>geraetid : INT FK</TD></TR>
+            <TR><TD>fahrzeugid : INT FK</TD></TR>
+            <TR><TD>einbau_datum : DATETIME</TD></TR> 
+            <TR><TD>ausbau_datum : DATETIME</TD></TR> 
         </TABLE>
-    >];
+   >];
 
     // Beziehungen zwischen den Tabellen
     Fahrzeug -> Fahrt [label="1:n", color=blue, fontcolor=blue];
     Fahrzeug -> Wartung [label="1:n", color=blue, fontcolor=blue];
     Fahrzeug -> Geraet_Installation [label="1:n", color=blue, fontcolor=blue];
+    Fahrzeug -> Fahrer_Fahrzeug [label="1:n", color=blue, fontcolor=blue];
     Fahrer -> Fahrt_Fahrer [label="1:n", color=blue, fontcolor=blue];
+    Fahrer -> Fahrer_Fahrzeug [label="1:n", color=blue, fontcolor=blue];
     Fahrt -> Fahrt_Fahrer [label="1:n", color=blue, fontcolor=blue];
     Fahrt -> Diagnose [label="1:n", color=blue, fontcolor=blue];
     Fahrt -> Beschleunigung [label="1:n", color=blue, fontcolor=blue];
     Fahrt -> Fahrzeugparameter [label="1:n", color=blue, fontcolor=blue];
-    Geraet -> Wartung [label="1:n", color=blue, fontcolor=blue];
     Geraet -> Geraet_Installation [label="1:n", color=blue, fontcolor=blue];
+    Geraet -> Fahrt [label="1:n", color=blue, fontcolor=blue];
+
 }

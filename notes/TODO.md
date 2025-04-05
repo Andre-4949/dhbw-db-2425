@@ -9,7 +9,7 @@
 
 - [x] Import aller Daten in das MySQL-Schema, evtl. Datenbereinigung (über SQL/MySQL) 🔴
 - [x] Alle Importe innerhalb von Transaktionen 🔴
-- [ ] Lauffähige App erstellen (Programmrumpf ergänzen) 🔴
+- [x] Lauffähige App erstellen (Programmrumpf ergänzen) 🔴
 - [ ] Konvertierung der Tabellen nach MongoDB, einzeln und als embedded Collection (SQL und/oder Python)
 - [ ] Logging von Konvertierungen soll in eine Log-Tabelle geschrieben werden (als SQL codiert) 🔴
 - [x] Report 1: Durchschnittliche Geschwindigkeit und Motortemperatur für alle Fahrten im März 2024 (als SQL codiert) 🔴
@@ -17,8 +17,13 @@
 - [x] Report 3: Die höchste jemals gemessene Geschwindigkeit für jeden Fahrer (als SQL codiert) 🔴
 - [x] Hinzufügen der Collection unfall.json in MongoDB 🔴
 - [x] Editieren der MySQL-Tabellen soll in eine Changelog-Tabelle getriggert werden (als SQL codiert) 🔴
-- Wo im Frontend ?! [ ] Eine Stored Procedure zum Hinzufügen einer neuen Fahrt (als SQL codiert) 🔴 
+- [ ] Eine Stored Procedure zum Hinzufügen einer neuen Fahrt (als SQL codiert) 🔴 
 - [x] Änderungen sollen immer persistent in die MySQL-Datenbank geschrieben werden 🔴
 
 Mögliche Skriptgestaltung:
 ![grafik](https://github.com/user-attachments/assets/91f65873-4036-46ca-bb5a-86627f044b53)
+
+
+FRAGEN FÜR DIE VORLESUNG
+- Wo im Frontend soll man neue Fahrt mit Stored Procedure hinzufügen können?
+- Soll man selbst die fahrt_fahrer.csv zu eine 1-n-Beziehung vereinfachen?
