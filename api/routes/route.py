@@ -6,13 +6,13 @@ from infrastructure.database.helpers.helpers import (
     allowed_file,
     get_tables,
     convert_to_mongodb,
-    insert_message_to_mysql,
-    get_db,
+    insert_message_to_mysql
 )
 from infrastructure.config.config import (
     MONGO_CONFIG_STRING,
     MONGO_DB_NAME,
-    ALLOWED_TABLES,
+    MYSQL_ALLOWED_TABLES,
+    MONGO_ALLOWED_TABLES
 )
 from sqlalchemy import MetaData, text
 from flask import flash
@@ -51,11 +51,11 @@ def register_routes(app):
             # Existing collection
             if collection_choice == "existing":
                 selected_table = request.form.get("table_name")
-                if selected_table not in ALLOWED_TABLES:
+                if selected_table not in MONGO_ALLOWED_TABLES:
                     error_message = "Invalid table selected."
                     return render_template(
                         "add_data.html",
-                        tables=ALLOWED_TABLES,
+                        tables=MONGO_ALLOWED_TABLES,
                         success_message=success_message,
                         error_message=error_message,
                     )
@@ -70,7 +70,7 @@ def register_routes(app):
                     )
                     return render_template(
                         "add_data.html",
-                        tables=ALLOWED_TABLES,
+                        tables=MONGO_ALLOWED_TABLES,
                         success_message=success_message,
                         error_message=error_message,
                     )
@@ -116,7 +116,7 @@ def register_routes(app):
 
         return render_template(
             "add_data.html",
-            tables=ALLOWED_TABLES,
+            tables=MONGO_ALLOWED_TABLES,
             success_message=success_message,
             error_message=error_message,
         )
@@ -277,7 +277,7 @@ def register_routes(app):
             mongo_client = pymongo.MongoClient(MONGO_CONFIG_STRING)
             mongo_db = mongo_client[MONGO_DB_NAME]
 
-            collections = mongo_ALLOWED_TABLES
+            collections = MONGO_ALLOWED_TABLES
             if not collections:
                 stats["MongoDB"]["error"] = "No collections found"
 
@@ -407,41 +407,42 @@ def register_routes(app):
 
             # If user selects 'convert all', override selected_tables
             if convert_all == "true":
-                selected_tables = ALLOWED_TABLES
+                selected_tables = MYSQL_ALLOWED_TABLES
+                print(f"Converting all tables: {selected_tables}")
 
             do_embed = embed == "true"
             start_time = datetime.now()
 
-            try:
-                if selected_tables:
-                    # Perform conversion
-                    num_inserted_rows = convert_to_mongodb(selected_tables, do_embed)
+            # try:
+            if selected_tables:
+                # Perform conversion
+                num_inserted_rows = convert_to_mongodb(selected_tables, do_embed)
 
-                    # Calculate and store duration
-                    end_time = datetime.now()
-                    duration = (end_time - start_time).total_seconds()
-
-                    success_message = (
-                        f"Conversion of {num_inserted_rows} items completed!"
-                    )
-                    insert_message_to_mysql(success_message, duration)
-
-                    return render_template(
-                        "convert.html", success_message=success_message
-                    )
-
-                return render_template(
-                    "convert.html", success_message="No tables selected."
-                )
-
-            except Exception as exc:
+                # Calculate and store duration
                 end_time = datetime.now()
                 duration = (end_time - start_time).total_seconds()
 
-                error_message = f"Error during conversion: {str(exc)}"
-                insert_message_to_mysql(error_message, duration)
+                success_message = (
+                    f"Conversion of {num_inserted_rows} items completed!"
+                )
+                insert_message_to_mysql(success_message, duration)
 
-                return render_template("convert.html", success_message=error_message)
+                return render_template(
+                    "convert.html", success_message=success_message
+                )
+
+            return render_template(
+                "convert.html", success_message="No tables selected."
+            )
+
+            # except Exception as exc:
+            #     end_time = datetime.now()
+            #     duration = (end_time - start_time).total_seconds()
+
+            #     error_message = f"Error during conversion: {str(exc)}"
+            #     insert_message_to_mysql(error_message, duration)
+
+            #     return render_template("convert.html", success_message=error_message)
 
         return render_template("convert.html")
 
@@ -455,7 +456,7 @@ def register_routes(app):
 
         row_id = request.form.get("id")
         update_data = {k: v for k, v in request.form.items() if k != "id"}
-        print(f"{update_data=} {row_id=} {table_name=} {ALLOWED_TABLES=}")
+        print(f"{update_data=} {row_id=} {table_name=} {MYSQL_ALLOWED_TABLES=}")
         try:
             # if table_name not in ALLOWED_TABLES:
                 # MySQL Update
