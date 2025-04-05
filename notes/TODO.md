@@ -27,3 +27,5 @@ Mögliche Skriptgestaltung:
 FRAGEN FÜR DIE VORLESUNG
 - Wo im Frontend soll man neue Fahrt mit Stored Procedure hinzufügen können?
 - Soll man selbst die fahrt_fahrer.csv zu eine 1-n-Beziehung vereinfachen?
+- Soll die embedded collection komplett alles enthalten?
+- Reichen für das Logging der Konvertierungen die Success-Logs?

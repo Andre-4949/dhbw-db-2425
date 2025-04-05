@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS Fahrer_Fahrzeug;
 DROP TABLE IF EXISTS Fahrer;
 DROP TABLE IF EXISTS Fahrzeug;
 DROP TABLE IF EXISTS change_log;
+DROP TABLE IF EXISTS error_log;
 
 
 -- Fahrzeuge
@@ -135,4 +136,11 @@ CREATE TABLE change_log (
     old_value TEXT,
     new_value TEXT,
     changed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE error_log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    err_msg VARCHAR(255) NOT NULL,
+    table_name VARCHAR(50),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

@@ -61,7 +61,7 @@ digraph ERD {
 
     Geraet [label=< 
         <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
-            <TR><TD BGCOLOR="lightblue"><B>Gerät</B></TD></TR>
+            <TR><TD BGCOLOR="lightblue"><B>Geraet</B></TD></TR>
             <TR><TD BGCOLOR="gray"></TD></TR>
             <TR><TD>id : INT PK</TD></TR>
             <TR><TD>fahrzeugid : INT FK(50)</TD></TR>

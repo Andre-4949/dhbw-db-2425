@@ -56,11 +56,13 @@ def execute_sql_script(file_path):
     
     try:
         with mysql_engine.connect() as connection:
-            for statement in sql_script.split(";"):
-                if statement.strip():
-                    print("STATEMENT: ", sqlalchemy.text(statement))
-                    connection.execute(sqlalchemy.text(statement))
-        print("✅ SQL-Skript erfolgreich ausgeführt!")
+            sql_script = sql_script.replace("\r", "").replace("\n", " ").replace("\t", "")
+            while "  " in sql_script:
+                sql_script = sql_script.replace("  ", " ")
+            if sql_script.strip():
+                connection.execute(sqlalchemy.text(sql_script))
+                
+        print("✅ SQL-Skript erfolgreich ausgefühprt!")
     except Exception as e:
         print(f"❌ Fehler beim Ausführen des SQL-Skripts: {e}")
 
