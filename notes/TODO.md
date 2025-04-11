@@ -23,9 +23,14 @@
 Mögliche Skriptgestaltung:
 ![grafik](https://github.com/user-attachments/assets/91f65873-4036-46ca-bb5a-86627f044b53)
 
-
-FRAGEN FÜR DIE VORLESUNG
 - Wo im Frontend soll man neue Fahrt mit Stored Procedure hinzufügen können?
+  - Nein einfach nur mit schicken
 - Soll man selbst die fahrt_fahrer.csv zu eine 1-n-Beziehung vereinfachen?
+  - man muss nichts vereinfachen
 - Soll die embedded collection komplett alles enthalten?
+  - er hat ein Beispiel auf moodle hochgeladen
 - Reichen für das Logging der Konvertierungen die Success-Logs?
+  - ja das reicht aus, so wie es ist
+
+- Musterlösung embed passt nicht bei Gerätinstallation und Gerät csv, es werden Teile in Fahrzeuge verbaut, für die es keine Einträge in der geraet.csv gibt.
+  - Teil für fahrzeug id 1 wird bei fahrzeug id 4 verbaut?
