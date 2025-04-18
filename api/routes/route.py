@@ -277,11 +277,13 @@ def register_routes(app):
             mongo_client = pymongo.MongoClient(MONGO_CONFIG_STRING)
             mongo_db = mongo_client[MONGO_DB_NAME]
 
-            collections = MONGO_ALLOWED_TABLES
+            collections = mongo_db.list_collection_names()
             if not collections:
                 stats["MongoDB"]["error"] = "No collections found"
 
             for collection_name in collections:
+                if collection_name.startswith("system."):
+                    continue
                 collection = mongo_db[collection_name]
                 total_rows = collection.count_documents({})
 
@@ -299,36 +301,45 @@ def register_routes(app):
                     "total_rows": total_rows,
                     "last_updated": last_updated_time,
                 }
-
         except Exception as e:
             stats["MongoDB"]["error"] = str(e)
 
         # -------------------- ✅ Fetch MySQL Stats ✅ --------------------
         try:
-            conn = (
-                get_mysql_connection()
-            )  # ✅ Uses default DB settings from .env/config
-
-            query = """
-                SHOW TABLES;
-            """
-
-            # ✅ Ensure cursor returns dictionaries instead of tuples
+            conn = get_mysql_connection()
             cursor = conn.cursor(dictionary=True)
-            cursor.execute(query, ("telematik",))
+            
+            # First get all table names
+            cursor.execute("SHOW TABLES;")
             tables = cursor.fetchall()
-
-            # ✅ Process MySQL results correctly
-            for table in tables:
-                stats["MySQL"][table["table_name"]] = {
-                    "total_rows": table["total_rows"]
-                    if table["total_rows"] is not None
-                    else "N/A",
-                    "last_updated": table["last_updated"]
-                    if table["last_updated"]
-                    else "N/A",
+            
+            for table_row in tables:
+                table_name = list(table_row.values())[0]  # Extract table name from the dictionary
+                
+                # Count the rows in the table
+                cursor.execute(f"SELECT COUNT(*) AS total_rows FROM {table_name};")
+                count_result = cursor.fetchone()
+                total_rows = count_result["total_rows"] if count_result else 0
+                
+                # Get the last updated time if available (using id field if it exists)
+                try:
+                    cursor.execute(f"SHOW COLUMNS FROM {table_name} LIKE 'id';")
+                    has_id = cursor.fetchone() is not None
+                    
+                    if has_id:
+                        cursor.execute(f"SELECT MAX(id) AS last_id FROM {table_name};")
+                        last_id_result = cursor.fetchone()
+                        last_updated = last_id_result["last_id"] if last_id_result and last_id_result["last_id"] else "N/A"
+                    else:
+                        last_updated = "N/A"
+                except Exception:
+                    last_updated = "N/A"
+                
+                stats["MySQL"][table_name] = {
+                    "total_rows": total_rows,
+                    "last_updated": last_updated
                 }
-
+            
             cursor.close()
             conn.close()
 

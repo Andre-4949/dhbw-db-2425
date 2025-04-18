@@ -103,8 +103,8 @@ def check_and_convert_csv_files(directory):
 check_and_convert_csv_files("data")
 
 
-# execute_sql_script("data/create_mysql_db.sql")
-# execute_sql_script("data/fill_mysql.sql")
+execute_sql_script("data/_1.sql")
+execute_sql_script("data/_2.sql")
 if __name__ == '__main__':
     app.run(debug=True)
 

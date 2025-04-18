@@ -129,6 +129,8 @@ def convert_to_mongodb(selected_tables, embed=True):
     """
     from app import mysql_engine, mysql_session
     import json
+    import time
+    t = time.time()
 
     client = pymongo.MongoClient(MONGO_CONFIG_STRING)
     db = client[MONGO_DB_NAME]
@@ -165,12 +167,12 @@ def convert_to_mongodb(selected_tables, embed=True):
             if geraet_table is not None:
                 for row in session.query(geraet_table).all():
                     row_dict = dict(zip(geraet_table.columns.keys(), row))
-                    fahrzeug_id = row_dict.get("fahrzeugid")
-                    if fahrzeug_id not in geraet_data.keys():
-                        geraet_data[fahrzeug_id] = []
-                    geraet = geraet_data[fahrzeug_id]
+                    geraet_id = row_dict.get("id")
+                    if geraet_id not in geraet_data.keys():
+                        geraet_data[geraet_id] = []
+                    geraet = geraet_data[geraet_id]
                     geraet.append(fix_dates(row_dict))
-                    geraet_data[fahrzeug_id] = geraet
+                    geraet_data[geraet_id] = geraet
             # Group fahrt_fahrer data by Fahrt id
             fahrt_fahrer_data = {}
             if fahrt_fahrer_table is not None and fahrer_table is not None:
@@ -245,8 +247,7 @@ def convert_to_mongodb(selected_tables, embed=True):
                     existing_geraet_installation = geraet_installation_data[key]
                     existing_geraet_installation.append(d)
                     geraet_installation_data[key] = existing_geraet_installation
-            
-            print(json.dumps(geraet_installation_data,indent=4, default=str))    
+            print(json.dumps(geraet_data, indent=4, default=str))
             for row in rows_as_dicts:
                 row_dict = fix_dates(row)
                 row_dict["fahrzeug"] = fix_dates(fahrzeug_data.get(row_dict.get("fahrzeugid"), {}))
@@ -261,7 +262,7 @@ def convert_to_mongodb(selected_tables, embed=True):
                     geraet_id = geraet_intallation.get("geraetid")
                     if geraet_intallation.get("einbau_datum") is not null and geraet_intallation.get("ausbau_datum") is null:
                         currently_installed.append(geraet_id)
-                row_dict["geraet"] = [fix_dates(geraet) if geraet.get("id") in currently_installed else None for geraet in geraet_data.get(row_dict.get("fahrzeugid"), []) ]
+                row_dict["geraet"] = [fix_dates(geraet) for geraet in geraet_data.get(row_dict.get("geraetid"), [])]
                 embedded_data.append(row_dict)
 
             db["embedded"].insert_many(list(embedded_data))
@@ -274,5 +275,5 @@ def convert_to_mongodb(selected_tables, embed=True):
                 total_inserted += len(documents)
 
     session.close()
-    print("Conversion completed.")
+    print(f"Conversion completed in {time.time() - t} seconds.")
     return total_inserted
