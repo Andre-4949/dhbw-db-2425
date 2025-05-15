@@ -169,18 +169,29 @@ def register_routes(app):
         
         # -------------------------------------------------------------------------
         # 🌡️ Report: Durchschnittliche Geschwindigkeit und Motortemperatur im März 2024
-        # -------------------------------------------------------------------------
-        elif selected_report == "avg_speed_temp_march":
+        # -------------------------------------------------------------------------        elif selected_report == "avg_speed_temp_march":
             query = """
-                SELECT AVG(fp.geschwindigkeit) AS avg_speed, AVG(fp.motortemperatur) AS avg_temp
-                FROM Fahrzeugparameter fp, Fahrt f
-                WHERE fp.fahrtid = f.id
-                AND f.startzeitpunkt >= '2024-03-01' AND f.endzeitpunkt < '2024-04-01';
+                SELECT 
+                    fa.id AS fahrerID,
+                    fa.vorname,
+                    fa.nachname,
+                    AVG(fp.geschwindigkeit) AS avg_speed, 
+                    AVG(fp.motortemperatur) AS avg_temp
+                FROM Fahrzeugparameter fp
+                JOIN Fahrt f ON fp.fahrtid = f.id
+                JOIN Fahrt_Fahrer ff ON f.id = ff.fahrtid
+                JOIN Fahrer fa ON ff.fahrerid = fa.id
+                WHERE f.startzeitpunkt >= '2024-03-01' AND f.endzeitpunkt < '2024-04-01'
+                GROUP BY fa.id, fa.vorname, fa.nachname
+                ORDER BY fa.nachname, fa.vorname;
             """
             cursor.execute(query)
             result = cursor.fetchall()
             report_data = [
                 {
+                    "fahrerID": row["fahrerID"],
+                    "vorname": row["vorname"],
+                    "nachname": row["nachname"],
                     "avg_speed": row["avg_speed"],
                     "avg_temp": row["avg_temp"],
                 }
@@ -190,13 +201,14 @@ def register_routes(app):
         # -------------------------------------------------------------------------
         # 🕒 Report: Fahrer der letzten drei Monate
         # -------------------------------------------------------------------------
+    
         elif selected_report == "recent_drivers":
             query = """
             SELECT DISTINCT f.id AS fahrerID, f.vorname, f.nachname
             FROM Fahrer f
             JOIN Fahrt_Fahrer ff ON f.id = ff.fahrerid
             JOIN Fahrt fa ON ff.fahrtid = fa.id
-            WHERE fa.startzeitpunkt >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+            WHERE fa.startzeitpunkt >= DATE_SUB(CURDATE(), INTERVAL 20 MONTH)
             ORDER BY f.nachname, f.vorname;
             """
             cursor.execute(query)
@@ -209,6 +221,8 @@ def register_routes(app):
                 }
                 for row in result
             ]
+            print(result)
+            
 
         # -------------------------------------------------------------------------
         # 🚀 Report: Höchste Geschwindigkeit pro Fahrer
@@ -264,8 +278,6 @@ def register_routes(app):
             total_pages=total_pages,
             total_items=total_items,
         )
-
-    # Add more routes here...
 
     @app.route("/database-stats", methods=["GET"])
     def get_database_stats():
@@ -323,16 +335,24 @@ def register_routes(app):
                 
                 # Get the last updated time if available (using id field if it exists)
                 try:
-                    cursor.execute(f"SHOW COLUMNS FROM {table_name} LIKE 'id';")
-                    has_id = cursor.fetchone() is not None
+                    # cursor.execute(f"SHOW COLUMNS FROM {table_name} LIKE 'id';")
+                    # has_id = cursor.fetchone() is not None
                     
-                    if has_id:
-                        cursor.execute(f"SELECT MAX(id) AS last_id FROM {table_name};")
-                        last_id_result = cursor.fetchone()
-                        last_updated = last_id_result["last_id"] if last_id_result and last_id_result["last_id"] else "N/A"
+                    # if has_id:
+                    #     cursor.execute(f"SELECT MAX(id) AS last_id FROM {table_name};")
+                    #     last_id_result = cursor.fetchone()
+                    #     last_updated = last_id_result["last_id"] if last_id_result and last_id_result["last_id"] else "N/A"
+                    # else:
+                    #     last_updated = "N/A"
+                    cursor.execute(f"SELECT MAX(changed_at) AS last_changed FROM change_log WHERE table_name LIKE '{table_name}';")
+                    last_updated_result = cursor.fetchone()
+                    if last_updated_result and last_updated_result["last_changed"]:
+                        last_updated = last_updated_result["last_changed"].strftime("%Y-%m-%d %H:%M:%S")
+                        print(last_updated)
                     else:
                         last_updated = "N/A"
-                except Exception:
+                except Exception as e:
+                    print(e)
                     last_updated = "N/A"
                 
                 stats["MySQL"][table_name] = {
