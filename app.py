@@ -106,6 +106,4 @@ check_and_convert_csv_files("data")
 execute_sql_script("data/_1.sql")
 execute_sql_script("data/_2.sql")
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
+    app.run(debug=True, host='0.0.0.0', port=5000)

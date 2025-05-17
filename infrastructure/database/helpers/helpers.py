@@ -263,6 +263,7 @@ def convert_to_mongodb(selected_tables, embed=True):
                     if geraet_intallation.get("einbau_datum") is not null and geraet_intallation.get("ausbau_datum") is null:
                         currently_installed.append(geraet_id)
                 row_dict["geraet"] = [fix_dates(geraet) for geraet in geraet_data.get(row_dict.get("geraetid"), [])]
+                ## Hier von Fahr übernommen, obwohl das meistens falsch ist (war in der Mustlösung auch falsch)
                 embedded_data.append(row_dict)
 
             db["embedded"].insert_many(list(embedded_data))
