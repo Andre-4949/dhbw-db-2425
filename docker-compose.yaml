@@ -25,7 +25,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - mongo-data:/data/db
-
   mysql:
     image: mysql:8.0
     container_name: mysql
@@ -40,6 +39,10 @@ services:
       - mysql-data:/var/lib/mysql
       - ./my.cnf:/etc/mysql/my.cnf
       - ./data:/var/lib/mysql-files/
+      - ./data/_1.sql:/docker-entrypoint-initdb.d/01_init.sql
+      - ./data/_2.sql:/docker-entrypoint-initdb.d/02_init.sql
+      - ./data/_3.sql:/docker-entrypoint-initdb.d/03_init.sql
+      - ./data/_4.sql:/docker-entrypoint-initdb.d/04_init.sql
 
 volumes:
   mongo-data:

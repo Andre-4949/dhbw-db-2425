@@ -102,8 +102,14 @@ def check_and_convert_csv_files(directory):
 
 check_and_convert_csv_files("data")
 
+# SQL scripts (_1.sql to _4.sql) are now run automatically during 
+# MySQL container initialization via docker-compose volume mounts
+# execute_sql_script("data/_1.sql")
+# execute_sql_script("data/_2.sql")
 
-execute_sql_script("data/_1.sql")
-execute_sql_script("data/_2.sql")
+# Check if we need to run _3.sql and _4.sql manually (now handled by Docker)
+# execute_sql_script("data/_3.sql")
+# execute_sql_script("data/_4.sql")
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
